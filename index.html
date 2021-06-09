@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="displayRandomNumber" class="form-control" type="text">
+                    <button onclick="createRandNumber()" class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input class="form-control" id="match" type="text">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div class="button btn">7</div>
+                              <div class="button btn">8</div>
+                              <div class="button btn">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button btn">4</div>
+                              <div class="button btn">5</div>
+                              <div class="button btn">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button btn">1</div>
+                              <div class="button btn">2</div>
+                              <div class="button btn">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div onclick="clears('delete')" class="button"><</div>
+                                <div class="button btn">0</div>
+                                <div onclick="clears('clear')" class="button">C</div>
+                            </div>
+                            <div>
+                                <button onclick="matchNumber()" type="submit" class="submit-btn">Submit</button>
+                                <p class="action-left"><span id="tryTime">5</span> try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p id="pinDidNotMatch" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="pinMatch" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+            <p id="try"></p>
+        </div>
+    </div>
+
+    <script>
+        //set button value in display input
+        var get = document.getElementsByClassName('btn');
+        for(var i = 0;i<get.length;i++){
+            var buttons = get[i];
+            
+            buttons.addEventListener('click',function(){
+                document.getElementById('match').value += this.innerHTML;
+            })
+        }
+
+
+
+        //set delete button and clear button
+        function clears(format){
+            if(format == 'clear'){
+                var values = '';
+            }
+            if(format == 'delete'){
+                var values = document.getElementById("match").value.slice(0, - 1);
+            }
+            document.getElementById('match').value = values;
+        }
+
+        //set try left
+        var tryLeft = 5;
+
+        //create random number
+        function createRandNumber(){
+            var  rand= Math.floor(1000 + Math.random() * 9000);
+            document.getElementById("displayRandomNumber").value = rand;
+            tryLeft = 5;
+            // empty try left condition paragraph
+            document.getElementById('try').innerHTML = '';
+        }
+
+
+        // match the number with random number
+        function matchNumber(){
+            var getRand =  document.getElementById("displayRandomNumber").value;
+            var getMatch = document.getElementById('match').value;
+            
+            if(tryLeft < 2){
+                //when he will try over then 5 time.this massage will show in the paragraph
+                 document.getElementById('try').innerHTML = 'Your cannot try over then 5 time.please try with another pin.';
+
+                 //when this massage will show.then (did not match the number) the message will hide
+                 document.getElementById("pinDidNotMatch").style.display = 'none';
+            }
+            else{
+                if(getRand == getMatch){
+                    // when the number will match the message will show below in the page
+                    document.getElementById("pinMatch").style.display = 'block';
+
+                    // when the number will match the message will hide
+                    document.getElementById("pinDidNotMatch").style.display = 'none';
+                }
+                else{
+                    // decries this number with every else.soThat he can not try it over 5 time
+                    tryLeft--;
+
+                    document.getElementById("pinDidNotMatch").style.display = 'block';
+                    document.getElementById("pinMatch").style.display = 'none';
+                    document.getElementById("tryTime").innerHTML = tryLeft;
+                }
+            }
+        }
+
+        
+        
+    </script>
+</body>
+</html>
